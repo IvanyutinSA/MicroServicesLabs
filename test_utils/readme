@@ -1,0 +1,5 @@
+copy test_utils to main directory
+create directory tests
+program searches for every file that matches "test_.*.py"
+to create test suit just inherit base class TestSuit
+to create test case write function that includes "test" in name
