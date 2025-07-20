@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 service ReportService {
-    ReportGenerate (ReportGenerateRequest) returns (ReportGenerateReply) {}
-    ReportExport (ReportExportRequest) returns (ReportExportReply) {}
+    rpc ReportGenerate (ReportGenerateRequest) returns (ReportGenerateReply) {}
+    rpc ReportExport (ReportExportRequest) returns (ReportExportReply) {}
 }
 
 message Transaction {
@@ -12,16 +12,25 @@ message Transaction {
 }
 
 message Report {
-    repeated Transaction = 1;
-    total_income = 2;
-    total_operations = 3;
+    repeated Transaction transactions = 1;
+    double total_income = 2;
+    int32 total_operations = 3;
 }
 
 message ReportGenerateRequest {
     repeated Transaction transactions = 1;
 }
 
-ReportGenerateReply {
+message ReportGenerateReply {
     int32 status = 1;
     Report report = 2;
+}
+
+message ReportExportRequest {
+    string destination = 1;
+    Report report = 2;
+}
+
+message ReportExportReply {
+    int32 status = 1;
 }
