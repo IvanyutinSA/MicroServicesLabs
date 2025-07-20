@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+service TransactionService {
+    rpc TransactionAdd (TransactionAddRequest)
+                        returns (TransactionAddReply) {}
+    rpc TransactionGet (TransactionGetRequest)
+                        returns (TransactionGetReply) {}
+}
+
+message Transaction {
+    string transaction_name = 1;
+    double amount = 2;
+    string date = 3;
+}
+
+message TransactionAddRequest {
+    Transaction transaction = 1;
+}
+
+message TransactionAddReply {
+    int32 status = 1;
+}
+
+message TransactionGetRequest {
+    string start_date = 1;
+    string end_date = 2;
+}
+
+
+message TransactionGetReply {
+    int32 status = 1;
+    repeated Transaction transactions = 2;
+}

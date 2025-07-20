@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+service ReportService {
+    ReportGenerate (ReportGenerateRequest) returns (ReportGenerateReply) {}
+    ReportExport (ReportExportRequest) returns (ReportExportReply) {}
+}
+
+message Transaction {
+    string transaction_name = 1;
+    double amount = 2;
+    string date = 3;
+}
+
+message Report {
+    repeated Transaction = 1;
+    total_income = 2;
+    total_operations = 3;
+}
+
+message ReportGenerateRequest {
+    repeated Transaction transactions = 1;
+}
+
+ReportGenerateReply {
+    int32 status = 1;
+    Report report = 2;
+}
