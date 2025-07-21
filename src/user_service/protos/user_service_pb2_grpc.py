@@ -44,10 +44,10 @@ class UserServiceStub(object):
                 request_serializer=user__service__pb2.AuthenticateRequest.SerializeToString,
                 response_deserializer=user__service__pb2.AuthenticateReply.FromString,
                 _registered_method=True)
-        self.GetUserInformation = channel.unary_unary(
-                '/UserService/GetUserInformation',
-                request_serializer=user__service__pb2.GetUserInformationRequest.SerializeToString,
-                response_deserializer=user__service__pb2.GetUserInformationReply.FromString,
+        self.UserGetInformation = channel.unary_unary(
+                '/UserService/UserGetInformation',
+                request_serializer=user__service__pb2.UserGetInformationRequest.SerializeToString,
+                response_deserializer=user__service__pb2.UserGetInformationReply.FromString,
                 _registered_method=True)
 
 
@@ -66,7 +66,7 @@ class UserServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetUserInformation(self, request, context):
+    def UserGetInformation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -85,10 +85,10 @@ def add_UserServiceServicer_to_server(servicer, server):
                     request_deserializer=user__service__pb2.AuthenticateRequest.FromString,
                     response_serializer=user__service__pb2.AuthenticateReply.SerializeToString,
             ),
-            'GetUserInformation': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetUserInformation,
-                    request_deserializer=user__service__pb2.GetUserInformationRequest.FromString,
-                    response_serializer=user__service__pb2.GetUserInformationReply.SerializeToString,
+            'UserGetInformation': grpc.unary_unary_rpc_method_handler(
+                    servicer.UserGetInformation,
+                    request_deserializer=user__service__pb2.UserGetInformationRequest.FromString,
+                    response_serializer=user__service__pb2.UserGetInformationReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -156,7 +156,7 @@ class UserService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetUserInformation(request,
+    def UserGetInformation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -169,9 +169,9 @@ class UserService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UserService/GetUserInformation',
-            user__service__pb2.GetUserInformationRequest.SerializeToString,
-            user__service__pb2.GetUserInformationReply.FromString,
+            '/UserService/UserGetInformation',
+            user__service__pb2.UserGetInformationRequest.SerializeToString,
+            user__service__pb2.UserGetInformationReply.FromString,
             options,
             channel_credentials,
             insecure,

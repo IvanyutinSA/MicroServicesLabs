@@ -32,13 +32,13 @@ class AuthenticateReply(_message.Message):
     status: int
     def __init__(self, status: _Optional[int] = ...) -> None: ...
 
-class GetUserInformationRequest(_message.Message):
-    __slots__ = ("user_id",)
-    USER_ID_FIELD_NUMBER: _ClassVar[int]
-    user_id: int
-    def __init__(self, user_id: _Optional[int] = ...) -> None: ...
+class UserGetInformationRequest(_message.Message):
+    __slots__ = ("user_name",)
+    USER_NAME_FIELD_NUMBER: _ClassVar[int]
+    user_name: str
+    def __init__(self, user_name: _Optional[str] = ...) -> None: ...
 
-class GetUserInformationReply(_message.Message):
+class UserGetInformationReply(_message.Message):
     __slots__ = ("status", "user_name")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     USER_NAME_FIELD_NUMBER: _ClassVar[int]
