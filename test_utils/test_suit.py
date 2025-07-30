@@ -32,8 +32,12 @@ class TestSuit:
         return self.__class__.__name__
 
     def assert_true(self, pred, message=None):
-        if pred:
+        if not pred:
             self.raise_exception('Assert true exception')
+
+    def assert_false(self, pred, message=None):
+        if pred:
+            self.raise_exception('Assert false exception')
 
     def assert_eq(self, x, y, message=None):
         if x != y:

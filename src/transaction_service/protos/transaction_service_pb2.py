@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19transaction_service.proto\"E\n\x0bTransaction\x12\x18\n\x10transaction_name\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\":\n\x15TransactionAddRequest\x12!\n\x0btransaction\x18\x01 \x01(\x0b\x32\x0c.Transaction\"%\n\x13TransactionAddReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\"=\n\x15TransactionGetRequest\x12\x12\n\nstart_date\x18\x01 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x02 \x01(\t\"I\n\x13TransactionGetReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\"\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x0c.Transaction2\x98\x01\n\x12TransactionService\x12@\n\x0eTransactionAdd\x12\x16.TransactionAddRequest\x1a\x14.TransactionAddReply\"\x00\x12@\n\x0eTransactionGet\x12\x16.TransactionGetRequest\x1a\x14.TransactionGetReply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19transaction_service.proto\"Y\n\x0bTransaction\x12\x12\n\nowner_name\x18\x01 \x01(\t\x12\x18\n\x10transaction_name\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x01\x12\x0c\n\x04\x64\x61te\x18\x04 \x01(\t\":\n\x15TransactionAddRequest\x12!\n\x0btransaction\x18\x01 \x01(\x0b\x32\x0c.Transaction\"%\n\x13TransactionAddReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\"Q\n\x15TransactionGetRequest\x12\x12\n\nowner_name\x18\x01 \x01(\t\x12\x12\n\nstart_date\x18\x02 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x03 \x01(\t\"I\n\x13TransactionGetReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\"\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x0c.Transaction2\x98\x01\n\x12TransactionService\x12@\n\x0eTransactionAdd\x12\x16.TransactionAddRequest\x1a\x14.TransactionAddReply\"\x00\x12@\n\x0eTransactionGet\x12\x16.TransactionGetRequest\x1a\x14.TransactionGetReply\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,15 +32,15 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'transaction_service_pb2', _
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_TRANSACTION']._serialized_start=29
-  _globals['_TRANSACTION']._serialized_end=98
-  _globals['_TRANSACTIONADDREQUEST']._serialized_start=100
-  _globals['_TRANSACTIONADDREQUEST']._serialized_end=158
-  _globals['_TRANSACTIONADDREPLY']._serialized_start=160
-  _globals['_TRANSACTIONADDREPLY']._serialized_end=197
-  _globals['_TRANSACTIONGETREQUEST']._serialized_start=199
-  _globals['_TRANSACTIONGETREQUEST']._serialized_end=260
-  _globals['_TRANSACTIONGETREPLY']._serialized_start=262
-  _globals['_TRANSACTIONGETREPLY']._serialized_end=335
-  _globals['_TRANSACTIONSERVICE']._serialized_start=338
-  _globals['_TRANSACTIONSERVICE']._serialized_end=490
+  _globals['_TRANSACTION']._serialized_end=118
+  _globals['_TRANSACTIONADDREQUEST']._serialized_start=120
+  _globals['_TRANSACTIONADDREQUEST']._serialized_end=178
+  _globals['_TRANSACTIONADDREPLY']._serialized_start=180
+  _globals['_TRANSACTIONADDREPLY']._serialized_end=217
+  _globals['_TRANSACTIONGETREQUEST']._serialized_start=219
+  _globals['_TRANSACTIONGETREQUEST']._serialized_end=300
+  _globals['_TRANSACTIONGETREPLY']._serialized_start=302
+  _globals['_TRANSACTIONGETREPLY']._serialized_end=375
+  _globals['_TRANSACTIONSERVICE']._serialized_start=378
+  _globals['_TRANSACTIONSERVICE']._serialized_end=530
 # @@protoc_insertion_point(module_scope)

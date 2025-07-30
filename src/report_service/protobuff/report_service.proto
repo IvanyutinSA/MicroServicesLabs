@@ -5,32 +5,33 @@ service ReportService {
     rpc ReportExport (ReportExportRequest) returns (ReportExportReply) {}
 }
 
-message Transaction {
-    string transaction_name = 1;
-    double amount = 2;
-    string date = 3;
+message RTransaction {
+    string owner_name = 1;
+    string transaction_name = 2;
+    double amount = 3;
+    string date = 4;
 }
 
 message Report {
-    repeated Transaction transactions = 1;
+    repeated RTransaction transactions = 1;
     double total_income = 2;
     int32 total_operations = 3;
 }
 
 message ReportGenerateRequest {
-    repeated Transaction transactions = 1;
+    repeated RTransaction transactions = 1;
 }
 
 message ReportGenerateReply {
     int32 status = 1;
-    Report report = 2;
+    optional Report report = 2;
 }
 
 message ReportExportRequest {
-    string destination = 1;
-    Report report = 2;
+    Report report = 1;
 }
 
 message ReportExportReply {
     int32 status = 1;
+    optional string report_name = 2;
 }

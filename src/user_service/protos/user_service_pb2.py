@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12user_service.proto\"6\n\x0fRegisterRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1f\n\rRegisterReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\":\n\x13\x41uthenticateRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"#\n\x11\x41uthenticateReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\".\n\x19UserGetInformationRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"O\n\x17UserGetInformationReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\x16\n\tuser_name\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_user_name2\xc7\x01\n\x0bUserService\x12.\n\x08Register\x12\x10.RegisterRequest\x1a\x0e.RegisterReply\"\x00\x12:\n\x0c\x41uthenticate\x12\x14.AuthenticateRequest\x1a\x12.AuthenticateReply\"\x00\x12L\n\x12UserGetInformation\x12\x1a.UserGetInformationRequest\x1a\x18.UserGetInformationReply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12user_service.proto\"D\n\x0fRegisterRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"\x1f\n\rRegisterReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\":\n\x13\x41uthenticateRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"#\n\x11\x41uthenticateReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\".\n\x19UserGetInformationRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"O\n\x17UserGetInformationReply\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\x16\n\tuser_name\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\x0c\n\n_user_name2\xc7\x01\n\x0bUserService\x12.\n\x08Register\x12\x10.RegisterRequest\x1a\x0e.RegisterReply\"\x00\x12:\n\x0c\x41uthenticate\x12\x14.AuthenticateRequest\x1a\x12.AuthenticateReply\"\x00\x12L\n\x12UserGetInformation\x12\x1a.UserGetInformationRequest\x1a\x18.UserGetInformationReply\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,17 +32,17 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'user_service_pb2', _globals
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_REGISTERREQUEST']._serialized_start=22
-  _globals['_REGISTERREQUEST']._serialized_end=76
-  _globals['_REGISTERREPLY']._serialized_start=78
-  _globals['_REGISTERREPLY']._serialized_end=109
-  _globals['_AUTHENTICATEREQUEST']._serialized_start=111
-  _globals['_AUTHENTICATEREQUEST']._serialized_end=169
-  _globals['_AUTHENTICATEREPLY']._serialized_start=171
-  _globals['_AUTHENTICATEREPLY']._serialized_end=206
-  _globals['_USERGETINFORMATIONREQUEST']._serialized_start=208
-  _globals['_USERGETINFORMATIONREQUEST']._serialized_end=254
-  _globals['_USERGETINFORMATIONREPLY']._serialized_start=256
-  _globals['_USERGETINFORMATIONREPLY']._serialized_end=335
-  _globals['_USERSERVICE']._serialized_start=338
-  _globals['_USERSERVICE']._serialized_end=537
+  _globals['_REGISTERREQUEST']._serialized_end=90
+  _globals['_REGISTERREPLY']._serialized_start=92
+  _globals['_REGISTERREPLY']._serialized_end=123
+  _globals['_AUTHENTICATEREQUEST']._serialized_start=125
+  _globals['_AUTHENTICATEREQUEST']._serialized_end=183
+  _globals['_AUTHENTICATEREPLY']._serialized_start=185
+  _globals['_AUTHENTICATEREPLY']._serialized_end=220
+  _globals['_USERGETINFORMATIONREQUEST']._serialized_start=222
+  _globals['_USERGETINFORMATIONREQUEST']._serialized_end=268
+  _globals['_USERGETINFORMATIONREPLY']._serialized_start=270
+  _globals['_USERGETINFORMATIONREPLY']._serialized_end=349
+  _globals['_USERSERVICE']._serialized_start=352
+  _globals['_USERSERVICE']._serialized_end=551
 # @@protoc_insertion_point(module_scope)

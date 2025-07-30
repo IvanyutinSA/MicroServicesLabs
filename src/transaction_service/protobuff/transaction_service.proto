@@ -8,9 +8,10 @@ service TransactionService {
 }
 
 message Transaction {
-    string transaction_name = 1;
-    double amount = 2;
-    string date = 3;
+    string owner_name = 1;
+    string transaction_name = 2;
+    double amount = 3;
+    string date = 4;
 }
 
 message TransactionAddRequest {
@@ -22,8 +23,9 @@ message TransactionAddReply {
 }
 
 message TransactionGetRequest {
-    string start_date = 1;
-    string end_date = 2;
+    string owner_name = 1;
+    string start_date = 2;
+    string end_date = 3;
 }
 
 

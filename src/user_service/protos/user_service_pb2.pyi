@@ -5,12 +5,14 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class RegisterRequest(_message.Message):
-    __slots__ = ("user_name", "password")
+    __slots__ = ("user_name", "password", "role")
     USER_NAME_FIELD_NUMBER: _ClassVar[int]
     PASSWORD_FIELD_NUMBER: _ClassVar[int]
+    ROLE_FIELD_NUMBER: _ClassVar[int]
     user_name: str
     password: str
-    def __init__(self, user_name: _Optional[str] = ..., password: _Optional[str] = ...) -> None: ...
+    role: str
+    def __init__(self, user_name: _Optional[str] = ..., password: _Optional[str] = ..., role: _Optional[str] = ...) -> None: ...
 
 class RegisterReply(_message.Message):
     __slots__ = ("status",)

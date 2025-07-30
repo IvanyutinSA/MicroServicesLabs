@@ -1,4 +1,5 @@
 import glob
+import traceback
 import sys
 import os
 import re
@@ -14,7 +15,7 @@ class TestRunner:
             sys.path.append(path)
 
     def find_files(self):
-        files = glob.glob('tests/**')
+        files = glob.glob('tests/**/*.py', recursive=True)
         files = [file for file in files if 'test_' in file]
         return files
 
@@ -30,8 +31,9 @@ class TestRunner:
         for test_suit in suits:
             try:
                 exec(f'from {module} import {test_suit}\nwith {test_suit}() as test_class:\n    test_class()')
-            except Exception:
+            except Exception as e:
                 print(f'{test_suit} suit case \033[41mfailed\033[0m to run. path: {file}')  # ]]
+                print(traceback.format_exc())
                 pass
 
     def run_tests(self):
