@@ -1,3 +1,4 @@
+import asyncio
 from sys import stderr
 import traceback
 
@@ -13,7 +14,10 @@ class TestSuit:
             print('\t', end='')
             try:
                 self.set_test_name(test_name)
-                func(self)
+                if asyncio.iscoroutinefunction(func):
+                    asyncio.run(func(self))
+                else:
+                    func(self)
                 print(f'{test_name} is \033[42mpassed\033[0m')  # ]]
             except Exception:
                 print(f'{test_name} is \033[41mnot passed\033[0m')  # ]]

@@ -37,6 +37,9 @@ class TestUserService(TestSuit):
             password = 'password'
             role = 'admin'
 
+            jwt_controller = JWTController()
+            jwt_controller.generate('user_name', 'user')
+
             request = user_service_pb2.RegisterRequest(
                     user_name=user_name,
                     password=password,

@@ -1,0 +1,35 @@
+Query {
+    getUser(username: string) {
+        user: User
+    }
+    getTransactions(start_date: string, end_date: string) {
+        [Transaction!]!
+    }
+}
+
+Mutation {
+    addTransaction(transaction: transaction) {
+        status: int
+    }
+    registerUser(user: User) {
+        status: int
+        token: string
+    }
+}
+
+Subscription {
+    transactionAdded(owner_name: string) {
+        Transaction
+    }
+}
+
+type User {
+    username
+}
+
+type Transaction {
+    owner_name: string
+    transaction_name = string
+    amount = int
+    date = string
+}

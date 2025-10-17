@@ -41,9 +41,11 @@ class UserGetInformationRequest(_message.Message):
     def __init__(self, user_name: _Optional[str] = ...) -> None: ...
 
 class UserGetInformationReply(_message.Message):
-    __slots__ = ("status", "user_name")
+    __slots__ = ("status", "user_name", "role")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     USER_NAME_FIELD_NUMBER: _ClassVar[int]
+    ROLE_FIELD_NUMBER: _ClassVar[int]
     status: int
     user_name: str
-    def __init__(self, status: _Optional[int] = ..., user_name: _Optional[str] = ...) -> None: ...
+    role: str
+    def __init__(self, status: _Optional[int] = ..., user_name: _Optional[str] = ..., role: _Optional[str] = ...) -> None: ...

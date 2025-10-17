@@ -8,8 +8,19 @@ import src.user_service.protos.user_service_pb2 as user_service_pb2
 import src.user_service.protos.user_service_pb2_grpc as user_service_pb2_grpc
 from src.middleware.jwt_controller import JWTController
 
+fool = {'user_name': 'fool',
+        'hashed_password': 'dsKJx2@1s>',
+        'role': 'admin'}
 
-users = []
+alice = {'user_name': 'Alice',
+         'hashed_password': 'password',
+         'role': 'user'}
+
+bob = {'user_name': 'Bob',
+       'hashed_password': 'password',
+       'role': 'user'}
+
+users = [fool, alice, bob]
 
 
 class UserServiceServicer(user_service_pb2_grpc.UserServiceServicer):
@@ -70,7 +81,7 @@ class UserServiceServicer(user_service_pb2_grpc.UserServiceServicer):
                                               user_name=user_name):
             return user_service_pb2.UserGetInformationReply(status=2)
         return user_service_pb2.UserGetInformationReply(
-                status=0, user_name=user_name)
+                status=0, user_name=user_name, role=user['role'])
 
 
 def setup_server():
