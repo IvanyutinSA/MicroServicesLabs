@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from hashlib import sha256
 
 from concurrent import futures
@@ -65,7 +67,9 @@ class UserServiceServicer(user_service_pb2_grpc.UserServiceServicer):
                 password.encode('utf-8')).hexdigest():
             return user_service_pb2.AuthenticateReply(status=1)
 
-        self.jwt_controller.generate(user['user_name'], role=user['role'])
+        self.jwt_controller.generate(user['user_name'],
+                                     role=user['role'],
+                                     issuer="UserService")
 
         return user_service_pb2.AuthenticateReply(status=0)
 
@@ -84,12 +88,21 @@ class UserServiceServicer(user_service_pb2_grpc.UserServiceServicer):
                 status=0, user_name=user_name, role=user['role'])
 
 
-def setup_server():
+def setup_server(secure=False):
     port = "50051"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     user_service_pb2_grpc.add_UserServiceServicer_to_server(
             UserServiceServicer(), server)
-    server.add_insecure_port("[::]:" + port)
+    if secure:
+        certs_dir = Path("certs")
+        server_credentials = grpc.ssl_server_credentials(
+                [(open(certs_dir / "user-service-key.pem", "rb").read(),
+                  open(certs_dir / "user-service-chain.pem", "rb").read())],
+                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
+                require_client_auth=True)
+        server.add_secure_port('[::]:' + port, server_credentials)
+    else:
+        server.add_insecure_port("[::]:" + port)
     return server
 
 

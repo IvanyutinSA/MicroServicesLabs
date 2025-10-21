@@ -1,3 +1,4 @@
+from pathlib import Path
 import datetime
 
 from src.middleware.jwt_controller import JWTController
@@ -56,12 +57,21 @@ class TransactionServiceServicer(transaction_service_pb2_grpc.TransactionService
                 status=0, transactions=transactions)
 
 
-def setup_server():
+def setup_server(secure=False):
     port = "50052"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     transaction_service_pb2_grpc.add_TransactionServiceServicer_to_server(
             TransactionServiceServicer(), server)
-    server.add_insecure_port("[::]:" + port)
+    if secure:
+        certs_dir = Path("certs")
+        server_credentials = grpc.ssl_server_credentials(
+                [(open(certs_dir / "transaction-service-key.pem", "rb").read(),
+                  open(certs_dir / "transaction-service-chain.pem", "rb").read())],
+                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
+                require_client_auth=True)
+        server.add_secure_port('[::]:' + port, server_credentials)
+    else:
+        server.add_insecure_port("[::]:" + port)
     return server
 
 

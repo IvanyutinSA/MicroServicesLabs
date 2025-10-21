@@ -85,8 +85,7 @@ class TestGraphQL(TestSuit):
             ''', variables=variables)
         self.assert_eq(reply.errors, None)
 
-    async def test_subscription(self):
-        return
+    async def tst_subscription(self):
         schema = build_schema()
         subscription = "subscription { transactionAdded }"
         result = await schema.subscribe(subscription)

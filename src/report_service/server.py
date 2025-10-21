@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import os
 
 import time
@@ -58,12 +60,21 @@ class ReportServiceServicer(report_service_pb2_grpc.ReportServiceServicer):
                 report_name=report_name)
 
 
-def setup_server():
+def setup_server(secure=False):
     port = "50053"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     report_service_pb2_grpc.add_ReportServiceServicer_to_server(
             ReportServiceServicer(), server)
-    server.add_insecure_port("[::]:" + port)
+    if secure:
+        certs_dir = Path("certs")
+        server_credentials = grpc.ssl_server_credentials(
+                [(open(certs_dir / "report-service-key.pem", "rb").read(),
+                  open(certs_dir / "report-service-chain.pem", "rb").read())],
+                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
+                require_client_auth=True)
+        server.add_secure_port('[::]:' + port, server_credentials)
+    else:
+        server.add_insecure_port("[::]:" + port)
     return server
 
 

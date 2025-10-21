@@ -24,11 +24,11 @@ class TestQraphqlServer(TestSuit):
 
             async with session.post("http://localhost:8000/graphql",
                                     json=query) as response:
+                pass
                 self.assert_eq(response.status, 200)
 
         await server.stop_server()
 
-    # package version conflict
     async def tst_run_server(self):
         self.jwt_controller.generate('admin', 'admin')
         server = GraphQLServer()

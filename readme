@@ -1,1 +1,2 @@
 authbind --deep python ./test_utils/run.py
+export PYTHONPATH=/home/sergey/Projects/Services:$PYTHONPATH

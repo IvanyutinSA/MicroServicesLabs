@@ -14,10 +14,11 @@ class JWTController:
         with open(".config/jwt_controller.config") as f:
             self.config = json.load(f)
 
-    def generate(self, user_name, role, type=None):
+    def generate(self, user_name, role, type=None, issuer="UserService"):
         header = {'alg': 'HS256', 'typ': 'JWT'}
         payload = {'user_name': user_name, 'role': role,
-                   'exp': time.time()+self.config['exp_delta'], }
+                   'exp': time.time()+self.config['exp_delta'],
+                   'iss': issuer}
         access_token = self.jwt.generate(header, payload)
         payload['exp'] = time.time()+self.config['refresh_exp_delta']
         refresh_token = self.jwt.generate(header, payload)

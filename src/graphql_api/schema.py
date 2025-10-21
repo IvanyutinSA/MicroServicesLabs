@@ -94,7 +94,7 @@ class Subscription(graphene.ObjectType):
             transactions_len = len(transactions_db)
             for j in range(1, diff+1):
                 yield transactions_db[-j]['transaction_name']
-            await asyncio.sleep(5)
+            await asyncio.sleep(6)
 
 
 class Query(graphene.ObjectType):
