@@ -1,5 +1,9 @@
 import grpc
+import msgpack
+
 from pathlib import Path
+
+from src.vk_auth_service.vk_auth_service import VkAuthService
 
 import src.user_service.protos.user_service_pb2_grpc as user_service_pb2_grpc
 import src.user_service.protos.user_service_pb2 as user_service_pb2
@@ -45,6 +49,15 @@ class UserServiceApi:
                 self._status_error(reply.status)
             return 'Success'
         self._connection_error()
+
+    def authenticate_vk(self):
+        vk_service = VkAuthService()
+        data = vk_service.authorize()
+        data = msgpack.unpackb(data)
+        username = data.get('username', None)
+        password = data.get('password', None)
+        self.register(username, password)
+        return self.authenticate(username, password)
 
     def user_get_information(self, username=None):
         with grpc.secure_channel('localhost:50051',
