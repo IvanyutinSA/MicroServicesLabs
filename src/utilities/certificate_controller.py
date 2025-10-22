@@ -2,7 +2,8 @@ import json
 import subprocess
 from pathlib import Path
 import shutil
-import datetime
+from datetime import datetime
+from datetime import timedelta
 
 
 class CertificateController:
@@ -23,18 +24,24 @@ class CertificateController:
         self.base_dir.mkdir(exist_ok=True)
         self.crl_dir.mkdir(exist_ok=True)
         self.backup_dir.mkdir(exist_ok=True)
-        print(f'directory: {self.base_dir.absolute()}')
 
     def setup_revoked_db(self):
         if not self.revoked_db.exists():
             with open(self.revoked_db, 'w') as f:
                 json.dump({"revoked_certificates": {}}, f)
 
-    def run_openssl_command(self, cmd, return_result=False):
+    def run_openssl_command(self, cmd, return_result=False, extra=False):
+        cwd = self.base_dir
+        if extra:
+            cwd = self.base_dir.parents[0]
 
         result = subprocess.run(cmd, shell=True, capture_output=True,
-                                text=True, cwd=self.base_dir)
+                                text=True, cwd=cwd)
         if result.returncode:
+            if not extra:
+                return self.run_openssl_command(cmd,
+                                                return_result=return_result,
+                                                extra=True)
             print(cmd)
             print(result.stderr)
         if return_result:
@@ -73,7 +80,7 @@ class CertificateController:
                "-extfile <(printf \"basicConstraints=critical,CA:true\")")
         return True
 
-    def generate_service_certificate(self, service_name, dns_names):
+    def generate_service_certificate(self, service_name, dns_names, days=365):
         key_name = f"{service_name}-key.pem"
         cmd = f"openssl genrsa -out {key_name} 2048"
         if self.run_openssl_command(cmd):
@@ -90,7 +97,7 @@ class CertificateController:
         cmd = (f"openssl x509 -req -in {csr_name} "
                f"-CA intermediate-ca-cert.pem -CAkey intermediate-ca-key.pem "
                "-CAcreateserial "
-               f"-out {cert_name} -days 365 -sha256 "
+               f"-out {cert_name} -days {days} -sha256 "
                f"-extfile <(printf \"subjectAltName={san_string}\")")
         if self.run_openssl_command(cmd):
             return False
@@ -162,15 +169,16 @@ class CertificateController:
 
         self._backup_service_certificates(service_name)
 
-        success = self.generate_service_certificate(service_name, dns_names)
+        success = self.generate_service_certificate(
+                service_name, dns_names, days=days)
+        print(success)
         if not success:
             self._restore_service_certificates(service_name)
 
         return success
 
     def get_certificate_status(self, cert_file):
-        # cert_path = self.base_dir / cert_file
-        cert_path = Path(cert_file)
+        cert_path = self.base_dir / cert_file
         if not cert_path.exists():
             return {'status': 'doesn\'t exists'}
 
@@ -193,7 +201,7 @@ class CertificateController:
                 'expiry_date': expiry_date.isoformat()}
 
     def _backup_service_certificates(self, service_name):
-        timestamp = datetime.now()
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         backup_path = self.backup_dir / timestamp
         backup_path.mkdir(parents=True, exist_ok=True)
 
@@ -229,7 +237,6 @@ class CertificateController:
         cert_path = cert_path
         cmd = f'openssl x509 -in {cert_path} -serial -noout'
         result = self.run_openssl_command(cmd, return_result=True)
-        print(result)
 
         if result.returncode:
             return None
@@ -268,22 +275,17 @@ class CertificateController:
             if not db['revoked_certificates']:
                 return True
 
-            crl_config = self.crl_dir / 'crl_config.txt'
+            crl_config = self.crl_dir / "crl_config.txt"
             with open(crl_config, 'w') as f:
-                for serial, info in db['revoked_certificates'].items():
-                    rev_date = datetime.fromisoformat(info['revocation_date'])
-                    f.write(f'{serial}\t{rev_date.strftime('%y%m%d%H%M%SZ')}'
-                            f'\t{info['reason']}\n')
-            crl_file = self.crl_dir / 'intermediate-ca.crl'
-            cmd = (f'openssl ca -gencrl '
-                   f'-keyfile {self.base_dir}/intermediate-ca-key.pem '
-                   f'-cert {self.base_dir}/intermediate-ca-cert.pem '
-                   f'-out {crl_file} '
-                   f'-config <(echo \"[ca]\ndatabase = {crl_config}\")')
+                for serial, info in db["revoked_certificates"].items():
+                    rev_date = datetime.fromisoformat(info["revocation_date"])
+                    f.write(f"{serial}\t{rev_date.strftime('%y%m%d%H%M%SZ')}\t{info['reason']}\n")
 
-            rc = not self.run_openssl_command(cmd)
-
-            crl_config.unlink(missing_ok=True)
+            cmd = ('keyfile certs/intermediate-ca-key.pem '
+                   '-cert certs/intermediate-ca-cert.pem '
+                   '-out certs/crl/intermediate-ca.crl '
+                   '-config <(echo \"[ca]\ndatabase={crl_config}\")')
+            rc = self.run_openssl_command(cmd)
 
             return not rc
 
@@ -298,7 +300,7 @@ class CertificateController:
         cmd = f'openssl verify -CRLfile {crl_file} -crl_check {cert_path}'
         rc = self.run_openssl_command(cmd)
 
-        return rc
+        return not rc
 
 
 if __name__ == "__main__":
