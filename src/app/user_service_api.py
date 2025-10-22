@@ -4,28 +4,14 @@ from pathlib import Path
 import src.user_service.protos.user_service_pb2_grpc as user_service_pb2_grpc
 import src.user_service.protos.user_service_pb2 as user_service_pb2
 
+from src.utilities.folk_certificate_controller import FolkCertificateController
+
 
 class UserServiceApi:
     def __init__(self):
-        self.credentials = self._get_credentials()
-
-    def _get_credentials(self):
-        certs_dir = Path("certs")
-
-        with open(certs_dir / "ca-bundle.pem", 'rb') as f:
-            root_certificates = f.read()
-
-        with open(certs_dir / "client-cert.pem", 'rb') as f:
-            certificate_chain = f.read()
-
-        with open(certs_dir / "client-key.pem", 'rb') as f:
-            private_key = f.read()
-
-        credentials = grpc.ssl_channel_credentials(
-                root_certificates=root_certificates,
-                private_key=private_key,
-                certificate_chain=certificate_chain)
-        return credentials
+        controller = FolkCertificateController()
+        self.credentials = grpc.ssl_channel_credentials(
+                **controller.get_channel_credentials('user-service'))
 
     def _status_error(self, status):
         raise Exception(

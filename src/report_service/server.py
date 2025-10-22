@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import os
 
 import time
@@ -13,6 +11,8 @@ import logging
 import grpc
 import src.report_service.protos.report_service_pb2 as report_service_pb2
 import src.report_service.protos.report_service_pb2_grpc as report_service_pb2_grpc
+
+from src.utilities.folk_certificate_controller import FolkCertificateController
 
 
 class ReportServiceServicer(report_service_pb2_grpc.ReportServiceServicer):
@@ -66,12 +66,9 @@ def setup_server(secure=False):
     report_service_pb2_grpc.add_ReportServiceServicer_to_server(
             ReportServiceServicer(), server)
     if secure:
-        certs_dir = Path("certs")
+        controller = FolkCertificateController()
         server_credentials = grpc.ssl_server_credentials(
-                [(open(certs_dir / "report-service-key.pem", "rb").read(),
-                  open(certs_dir / "report-service-chain.pem", "rb").read())],
-                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
-                require_client_auth=True)
+                **controller.get_server_credentials('report-service'))
         server.add_secure_port('[::]:' + port, server_credentials)
     else:
         server.add_insecure_port("[::]:" + port)

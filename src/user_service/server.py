@@ -9,6 +9,7 @@ import grpc
 import src.user_service.protos.user_service_pb2 as user_service_pb2
 import src.user_service.protos.user_service_pb2_grpc as user_service_pb2_grpc
 from src.middleware.jwt_controller import JWTController
+from src.utilities.folk_certificate_controller import FolkCertificateController
 
 fool = {'user_name': 'fool',
         'hashed_password': 'dsKJx2@1s>',
@@ -94,12 +95,9 @@ def setup_server(secure=False):
     user_service_pb2_grpc.add_UserServiceServicer_to_server(
             UserServiceServicer(), server)
     if secure:
-        certs_dir = Path("certs")
+        controller = FolkCertificateController()
         server_credentials = grpc.ssl_server_credentials(
-                [(open(certs_dir / "user-service-key.pem", "rb").read(),
-                  open(certs_dir / "user-service-chain.pem", "rb").read())],
-                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
-                require_client_auth=True)
+                **controller.get_server_credentials('user-service'))
         server.add_secure_port('[::]:' + port, server_credentials)
     else:
         server.add_insecure_port("[::]:" + port)

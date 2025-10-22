@@ -2,6 +2,8 @@ from pathlib import Path
 
 import grpc
 
+from src.utilities.folk_certificate_controller import FolkCertificateController
+
 from test_utils.test_suit import TestSuit
 from src.user_service.server import setup_server
 from src.middleware.jwt_controller import JWTController
@@ -14,27 +16,14 @@ class TestMTLS(TestSuit):
     def __init__(self):
         self.server = setup_server(secure=True)
 
-    def test_(self):
+    def test_folk(self):
         was_connected = False
-
-        certs_dir = Path("certs")
-
-        with open(certs_dir / "ca-bundle.pem", 'rb') as f:
-            root_certificates = f.read()
-
-        with open(certs_dir / "client-cert.pem", 'rb') as f:
-            certificate_chain = f.read()
-
-        with open(certs_dir / "client-key.pem", 'rb') as f:
-            private_key = f.read()
+        controller = FolkCertificateController()
 
         credentials = grpc.ssl_channel_credentials(
-                root_certificates=root_certificates,
-                private_key=private_key,
-                certificate_chain=certificate_chain
-                )
+                **controller.get_channel_credentials('client'))
 
-        with grpc.secure_channel("localhost:50051", credentials) as _:
+        with grpc.secure_channel("localhost:50051", credentials) as channel:
             was_connected = True
 
         self.assert_true(was_connected)

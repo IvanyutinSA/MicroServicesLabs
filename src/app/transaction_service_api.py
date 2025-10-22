@@ -4,10 +4,14 @@ from pathlib import Path
 import src.transaction_service.protos.transaction_service_pb2 as transaction_service_pb2
 import src.transaction_service.protos.transaction_service_pb2_grpc as transaction_service_pb2_grpc
 
+from src.utilities.folk_certificate_controller import FolkCertificateController
+
 
 class TransactionServiceApi:
     def __init__(self):
-        self.credentials = self._get_credentials()
+        controller = FolkCertificateController()
+        self.credentials = grpc.ssl_channel_credentials(
+                **controller.get_channel_credentials('transaction-service'))
 
     def _get_credentials(self):
         certs_dir = Path("certs")

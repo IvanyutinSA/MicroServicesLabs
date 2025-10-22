@@ -8,9 +8,11 @@ class FolkCertificateController:
             self,
             base_dir="ca",
             conf_path='/home/sergey/Projects/Services/'
-            'src/utilities/openssl.cnf'):
+            'src/utilities/openssl.cnf',
+            delete_all=False):
         self.base_dir = Path(base_dir)
-        shutil.rmtree(self.base_dir.absolute(), ignore_errors=True)
+        if delete_all:
+            shutil.rmtree(self.base_dir.absolute(), ignore_errors=True)
         dirs = [self.base_dir,
                 self.base_dir / 'certs',
                 self.base_dir / 'crl',
@@ -18,8 +20,9 @@ class FolkCertificateController:
                 self.base_dir / 'csr',
                 self.base_dir / 'private',
                 self.base_dir / 'private/.rand']
-        files_to_touch = ['index.txt']
-        files_to_echo = ['serial', 'crlnumber']
+        files_to_touch = [self.base_dir.absolute() / 'index.txt']
+        files_to_echo = [self.base_dir.absolute() / 'serial',
+                         self.base_dir.absolute() / 'crlnumber']
 
         self.setup_directories(dirs)
         self.setup_files(files_to_touch, files_to_echo)
@@ -34,9 +37,9 @@ class FolkCertificateController:
             self.create_server_cert(service)
 
     def get_server_credentials(self, server):
-        root = self.base_dir / 'certs/ca-bundle.pem'
-        key = self.base_dir / f'intermediate/private/{server}.key.pem'
-        chain = self.base_dir / f'intermediate/certs/{server}-chain.pem'
+        root = self.base_dir.absolute() / 'intermediate/certs/ca-chain.cert.pem'
+        key = self.base_dir.absolute() / f'intermediate/private/{server}.key.pem'
+        chain = self.base_dir.absolute() / f'intermediate/certs/{server}-chain.cert.pem'
 
         return {'private_key_certificate_chain_pairs':
                 [(open(key, 'rb').read(),
@@ -45,9 +48,9 @@ class FolkCertificateController:
                 'require_client_auth': True}
 
     def get_channel_credentials(self, server):
-        root = self.base_dir / 'certs/ca-bundle.pem'
-        key = self.base_dir / f'intermediate/private/{server}.key.pem'
-        chain = self.base_dir / f'intermediate/certs/{server}-chain.pem'
+        root = self.base_dir.absolute() / 'intermediate/certs/ca-chain.cert.pem'
+        key = self.base_dir.absolute() / f'intermediate/private/{server}.key.pem'
+        chain = self.base_dir.absolute() / f'intermediate/certs/{server}-chain.cert.pem'
 
         return {'root_certificates': open(root, 'rb').read(),
                 'private_key': open(key, 'rb').read(),
@@ -62,11 +65,13 @@ class FolkCertificateController:
 
     def setup_files(self, to_touch, to_echo):
         for file in to_touch:
-            cmd = f'touch {file}'
-            self.run_cmd(cmd)
+            if not file.is_file():
+                cmd = f'touch {file.absolute()}'
+                self.run_cmd(cmd)
         for file in to_echo:
-            cmd = f'echo \"1000\" > {file}'
-            self.run_cmd(cmd)
+            if not file.is_file():
+                cmd = f'echo \"1000\" > {file.absolute()}'
+                self.run_cmd(cmd)
 
     def cp_cnf(self, conf_path):
         cmd = f'cp {conf_path} {self.base_dir.absolute()}/openssl.cnf'
@@ -128,9 +133,10 @@ class FolkCertificateController:
                f'-out intermediate/certs/{server}.cert.pem '
                f'-batch')
         self.run_cmd(cmd)
-        cmd = ('cat intermediate/certs/{server}.cert.pem '
-               'intermediate/certs/intermediate.cert.pem > '
-               'intermediate/certs/{server}-chain.cert.pem')
+        cmd = (f'cat intermediate/certs/{server}.cert.pem '
+               f'intermediate/certs/intermediate.cert.pem > '
+               f'intermediate/certs/{server}-chain.cert.pem')
+        self.run_cmd(cmd)
 
     def create_crl(self):
         cmd = (f'openssl ca -config {self.ic_path} -gencrl '
@@ -141,3 +147,8 @@ class FolkCertificateController:
         cmd = (f'openssl ca -config {self.ic_path} -revoke '
                f'intermediate/certs/{service}.cert.pem')
         self.run_cmd(cmd)
+
+
+if __name__ == '__main__':
+    controller = FolkCertificateController(delete_all=True)
+    controller.create_all()

@@ -10,6 +10,8 @@ import grpc
 import src.transaction_service.protos.transaction_service_pb2 as transaction_service_pb2
 import src.transaction_service.protos.transaction_service_pb2_grpc as transaction_service_pb2_grpc
 
+from src.utilities.folk_certificate_controller import FolkCertificateController
+
 
 transactions_db = []
 
@@ -63,12 +65,9 @@ def setup_server(secure=False):
     transaction_service_pb2_grpc.add_TransactionServiceServicer_to_server(
             TransactionServiceServicer(), server)
     if secure:
-        certs_dir = Path("certs")
+        controller = FolkCertificateController()
         server_credentials = grpc.ssl_server_credentials(
-                [(open(certs_dir / "transaction-service-key.pem", "rb").read(),
-                  open(certs_dir / "transaction-service-chain.pem", "rb").read())],
-                root_certificates=open(certs_dir/"ca-bundle.pem", "rb").read(),
-                require_client_auth=True)
+                **controller.get_server_credentials('transaction-service'))
         server.add_secure_port('[::]:' + port, server_credentials)
     else:
         server.add_insecure_port("[::]:" + port)

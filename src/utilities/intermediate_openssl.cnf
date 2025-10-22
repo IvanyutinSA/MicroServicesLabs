@@ -119,7 +119,8 @@ nsComment = "OpenSSL Generated Server Certificate"
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer:always
 keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth
+#extendedKeyUsage = serverAuth
+extendedKeyUsage = serverAuth, clientAuth
 authorityInfoAccess = OCSP;URI:http://ocsp2.example.com
 #subjectAltName = @alt_names
 
